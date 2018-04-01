@@ -1,0 +1,14 @@
+.DS_Store
+vendor
+.idea
+
+documentation/
+user_guide/
+system/
+
+application/*
+!application/controllers
+!application/config
+!application/libraries
+!application/models
+!application/views

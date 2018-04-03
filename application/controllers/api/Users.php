@@ -11,20 +11,20 @@ class Users extends REST_Controller {
         // Construct the parent class
         parent::__construct();
 
-        $this->load->model('employees_model');
+        $this->load->model('users_model');
         $this->load->helper('url_helper');
     }
 
     public function index_get()
     {
         // Users from a data store e.g. database
-        $users = $this->employees_model->get_employees();
+        $users = $this->users_model->get();
         $this->set_response($users, 200);
     }
 
     public function index_post()
     {
-        $result = $this->employees_model->set_employee();
+        $result = $this->users_model->create();
         $message = [
             'text' => null
         ];
@@ -36,24 +36,12 @@ class Users extends REST_Controller {
         $this->set_response($message, REST_Controller::HTTP_CREATED); // CREATED (201) being the HTTP response code
     }
 
-    public function index_delete()
-    {
-        $id = (int) $this->get('id');
-
-        // Validate the id.
-        if ($id <= 0)
-        {
-            // Set the response and exit
-            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
+    public function auth_post(){
+        $result = $this->users_model->auth();
+        $message = false;
+        if($result){
+            $message = true;
         }
-
-        // $this->some_model->delete_something($id);
-        $message = [
-            'id' => $id,
-            'message' => 'Deleted the resource'
-        ];
-
-        $this->set_response($message, REST_Controller::HTTP_NO_CONTENT); // NO_CONTENT (204) being the HTTP response code
+        $this->set_response(array("success" => $message), 200); 
     }
-
 }

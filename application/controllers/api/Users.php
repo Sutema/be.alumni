@@ -44,4 +44,10 @@ class Users extends REST_Controller {
         }
         $this->set_response(array("success" => $message), 200); 
     }
+
+    public function verify_post(){
+        $result = $this->users_model->verify();
+
+        $this->set_response(array("success" => $result), 200);
+    }
 }

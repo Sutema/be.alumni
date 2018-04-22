@@ -29,13 +29,17 @@ class Users_model extends CI_Model{
         $this->load->helper('url');
         $id = $this->uuid->v4();
         $fullname = ucwords($this->input->post('fullname'));
-        $password = $this->randomString();
+        $options = [
+            'cost' => 12,
+        ];
+        $password = $this->input->post('password');
+        $hash = password_hash($password, PASSWORD_BCRYPT, $options);
         $username = url_title(strtolower($this->input->post('fullname')), '.', TRUE);
         
         $data = array(
             'id' => $id,
             'username' => $username,
-            'password' => $password,
+            'password' => $hash,
             'fullname' => $fullname, 
             'email'=> $this->input->post('email'), 
             'status' => 1
@@ -44,6 +48,13 @@ class Users_model extends CI_Model{
         return $this->db->insert($this->table_name, $data);
     }
 
+    public function verify(){
+        $password = $this->input->post("password");
+        $hash = $this->input->post("hash");
+        $result = password_verify($password, $hash);
+
+        return $result;
+    }
     private function randomString($length = 6) {
         $str = "";
         $characters = array_merge(range('A','Z'), range('a','z'), range('0','9'));

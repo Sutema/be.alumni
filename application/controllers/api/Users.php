@@ -26,9 +26,11 @@ class Users extends REST_Controller {
     {
         $result = $this->users_model->create();
         $message = [
+            'success' => false,
             'text' => null
         ];
         if($result){
+            $message['success'] = true;
             $message['text'] = 'Succesfully insert new User';
         }else{
             $message['text'] = 'Insert is failed';

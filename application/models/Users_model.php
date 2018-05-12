@@ -51,13 +51,19 @@ class Users_model extends CI_Model{
     public function verify(){
         $password = $this->input->post("password");
         $email = $this->input->post("email");
+        $result = false;
 
         $query = $this->db->get_where($this->table_name, array('email' => $email));
         $row = $query->result_array();
-
-        $hash = $row[0]['password'];
         
-        $result = password_verify($password, $hash);
+        try{
+            if($row != []){
+                $hash = $row[0]['password'];
+                $result = password_verify($password, $hash);
+            }
+        }
+        catch(Exception $e){
+        }
 
         return $result;
     }
